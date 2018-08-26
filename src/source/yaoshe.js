@@ -50,14 +50,24 @@ class Yaoshe{
         });
         return list;
     }
-    start(){
-        this.crawlerMain()
+    async start(){
+       await this.crawlerMain();
+       this.run();
+    }
+    run(){
+        setInterval(()=>{
+            this.crawlerEmbed()
+        }, 5000)
     }
     async saveList(list){
+        let count = 0;
         for(let item of list){
-            await this.queue.push(item)
+           let res =  await this.queue.push(item);
+           if(res){
+               count ++;
+           }
         }
-        console.log(`${list.length} staved in queue`)
+        console.log(`${count}/${list.length} staved in queue`)
     }
     /**
      * 爬取首页
@@ -68,7 +78,7 @@ class Yaoshe{
             let dom = await $get(this.mainpage);
             let list = this.getPageListByDom(dom);
             await this.saveList(list);
-            this.crawlerEmbed()
+            // this.crawlerEmbed()
         }catch(e){
             console.log(e)
         }
@@ -81,7 +91,7 @@ class Yaoshe{
      * 3. 存入mongodb等待下载
      */
     async crawlerEmbed(){
-        await sleep(3000)
+        // await sleep(3000)
         let item = await this.queue.shift();
         let dom = await $get(item.embed_url);
         let target_url = this.getTargetUrl(dom);
@@ -92,7 +102,7 @@ class Yaoshe{
             // console.log(item)
             console.log('1 item is insert to db')
         }
-        this.crawlerEmbed();
+        // this.crawlerEmbed();
     }
      /**
      * 爬取详情页, 得到更多的详情页, 加入队列
