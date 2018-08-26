@@ -81,7 +81,7 @@ class Yaoshe{
      * 3. 存入mongodb等待下载
      */
     async crawlerEmbed(){
-        await sleep(100)
+        await sleep(3000)
         let item = await this.queue.shift();
         let dom = await $get(item.embed_url);
         let target_url = this.getTargetUrl(dom);
