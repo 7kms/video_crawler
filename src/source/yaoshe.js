@@ -15,7 +15,7 @@ class Yaoshe{
         this.restartTimes = 0;
         this.mainpage = yaoshe;
         this.queue = new Queue('yaoshe');
-        this.queryIntervalTime = 6000;
+        this.queryIntervalTime = 10000;
     }
     getEmbedUrl(href){
         let reg = /videos\/(\d+?)\//;
@@ -23,7 +23,8 @@ class Yaoshe{
         let id = res ? res[1] : null;
         return id ? `${yaoshe}embed/${id}` : false;
     }
-    getTargetUrl(dom){
+    async getTargetUrl(item){
+        let dom = await $get(item.embed_url);
         const reg = /video_url:.*?'(.*?)'/;
         let res = dom.match(reg);
         let url = '';
@@ -31,6 +32,21 @@ class Yaoshe{
             url = res[1]
         }
         return url;
+    }
+    async getCategory(item){
+        let dom = await $get(item.url);
+        const $ = cheerio.load(dom);
+        let arr = [];
+        $('#tab_video_info .info .item').each((i, item)=>{
+            if(i == 1){
+                $(item).find('a').each((i,a)=>{
+                    arr.push($(a).text());
+                });
+                return false;
+            }
+        })
+        console.log(arr)
+        return arr;
     }
     getPageListByDom(dom){
         const $ = cheerio.load(dom);
@@ -109,10 +125,10 @@ class Yaoshe{
         }
         try{
             let item = await this.queue.shift();
-            let dom = await $get(item.embed_url);
-            let target_url = this.getTargetUrl(dom);
+            let target_url = await this.getTargetUrl(item);
             this.crawlerDetail(item)
             if(target_url){
+                item.categories = await this.getCategory(item);
                 item.target_url = target_url;
                 await yaosheModel.insert(item);
                 // console.log(item)
@@ -133,11 +149,22 @@ class Yaoshe{
        let list = this.getPageListByDom(dom);
        await this.saveList(list);
     }
-   
 
     download(obj){
         request.get(obj.target_url).pipe(fs.createWriteStream(path.resolve()))
     }
+
+    async fresh(){
+        let list = await yaosheModel.instance.find({categories: {$exists:false}}).toArray();
+        console.log(list.length)
+        while(list.length){
+            let item = list.shift();
+            const categories = await this.getCategory(item);
+            await yaosheModel.instance.updateOne({_id: item._id}, {$set:{categories}})
+            console.log(list.length)
+        }
+    }
+
 }
 
 module.exports = Yaoshe
