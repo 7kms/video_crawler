@@ -15,7 +15,7 @@ class Yaoshe{
         this.restartTimes = 0;
         this.mainpage = yaoshe;
         this.queue = new Queue('yaoshe');
-        this.queryIntervalTime = 3888;
+        this.queryIntervalTime = 6000;
     }
     getEmbedUrl(href){
         let reg = /videos\/(\d+?)\//;
