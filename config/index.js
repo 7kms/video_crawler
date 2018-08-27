@@ -7,5 +7,7 @@ console.log('env = %s', env)
 const base = {}
 
 const envConfig = env == 'production' ? prod : env == 'gray' ? gray : dev;
-module.exports = Object.assign({},base,envConfig);
+const finallyConfig = Object.assign({},base,envConfig);
+console.log('finallyConfig',finallyConfig)
+module.exports = finallyConfig;
 

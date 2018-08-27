@@ -10,7 +10,7 @@ module.exports = {
       name      : 'video_crawler',
       script    : 'src/index.js',
       env: {
-        COMMON_VARIABLE: 'true'
+        NODE_ENV: "production"
       },
       env_production : {
         NODE_ENV: 'production'
