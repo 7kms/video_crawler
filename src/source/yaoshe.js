@@ -12,8 +12,10 @@ const yaosheModel = require('../model/yaoshe')
 
 class Yaoshe{
     constructor(){
+        this.restartTimes = 0;
         this.mainpage = yaoshe;
         this.queue = new Queue('yaoshe');
+        this.queryIntervalTime = 3888;
     }
     getEmbedUrl(href){
         let reg = /videos\/(\d+?)\//;
@@ -64,7 +66,7 @@ class Yaoshe{
     run(){
         this.timer = setInterval(()=>{
             this.crawlerEmbed()
-        }, 3666)
+        }, this.queryIntervalTime)
     }
     async saveList(list){
         let count = 0;
@@ -74,7 +76,7 @@ class Yaoshe{
                count ++;
            }
         }
-        console.log(`${count}/${list.length} staved in queue`)
+        console.log(`${count}/${list.length} saved in queue`)
     }
     /**
      * 爬取首页
@@ -100,19 +102,24 @@ class Yaoshe{
     async crawlerEmbed(){
         // await sleep(3000)
         let length = await this.queue.count();
+        console.log('start crawlerEmbed, current queue length %d', length)
         if(length == 0){
             this.restart();
             return false;
         }
-        let item = await this.queue.shift();
-        let dom = await $get(item.embed_url);
-        let target_url = this.getTargetUrl(dom);
-        this.crawlerDetail(item)
-        if(target_url){
-            item.target_url = target_url;
-            await yaosheModel.insert(item);
-            // console.log(item)
-            console.log('1 item is insert to db')
+        try{
+            let item = await this.queue.shift();
+            let dom = await $get(item.embed_url);
+            let target_url = this.getTargetUrl(dom);
+            this.crawlerDetail(item)
+            if(target_url){
+                item.target_url = target_url;
+                await yaosheModel.insert(item);
+                // console.log(item)
+                console.log('1 item is insert to db');
+            }
+        }catch(e){
+            console.error(e)
         }
         // this.crawlerEmbed();
     }

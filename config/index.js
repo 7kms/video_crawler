@@ -1,10 +1,11 @@
 const dev = require('./development')
 const prod = require('./production')
-const isProd = process.env.NODE_ENV == 'production'
-console.log('isProd = %s', isProd)
+const gray = require('./gray')
+const env = process.env.NODE_ENV
+console.log('env = %s', env)
 
 const base = {}
 
-const envConfig = isProd ? prod : dev;
+const envConfig = env == 'production' ? prod : env == 'gray' ? gray : dev;
 module.exports = Object.assign({},base,envConfig);
 
