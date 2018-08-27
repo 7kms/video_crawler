@@ -8,7 +8,7 @@ const getConfig = (method, url , params) => {
         method,
         url,
         headers:{
-            'cookie':'__cfduid=d06c9e9f130bda3e4aa90cb3c1c2197181535039321; UM_distinctid=1656779eac081-0eb04f4f6893b4-34627908-fa000-1656779eac2127; kt_tcookie=1; kt_is_visited=1; CNZZDATA1264603175=814540470-1535034207-%7C1535039279; video_log=17157%3A1535038659%3B20705%3A1535041275%3B; kt_qparams=id%3D16627%26dir%3Dfhd; PHPSESSID=65jg2qh4ppaiqmp1f220ahr275',
+            // 'cookie':'__cfduid=d06c9e9f130bda3e4aa90cb3c1c2197181535039321; UM_distinctid=1656779eac081-0eb04f4f6893b4-34627908-fa000-1656779eac2127; kt_tcookie=1; kt_is_visited=1; CNZZDATA1264603175=814540470-1535034207-%7C1535039279; video_log=17157%3A1535038659%3B20705%3A1535041275%3B; kt_qparams=id%3D16627%26dir%3Dfhd; PHPSESSID=65jg2qh4ppaiqmp1f220ahr275',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
         }
     }

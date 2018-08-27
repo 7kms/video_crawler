@@ -54,10 +54,17 @@ class Yaoshe{
        await this.crawlerMain();
        this.run();
     }
+    restart(){
+        if(this.timer){
+            clearInterval(this.timer)
+            this.timer = null;
+        }
+        this.start();
+    }
     run(){
-        setInterval(()=>{
+        this.timer = setInterval(()=>{
             this.crawlerEmbed()
-        }, 5000)
+        }, 3666)
     }
     async saveList(list){
         let count = 0;
@@ -92,6 +99,11 @@ class Yaoshe{
      */
     async crawlerEmbed(){
         // await sleep(3000)
+        let length = await this.queue.count();
+        if(length == 0){
+            this.restart();
+            return false;
+        }
         let item = await this.queue.shift();
         let dom = await $get(item.embed_url);
         let target_url = this.getTargetUrl(dom);
