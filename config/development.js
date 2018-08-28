@@ -10,6 +10,6 @@ module.exports = {
     mongo:{
         port: 27017,
         host: '192.168.45.33',
-        dbName: 'km7_crawler_video'
+        dbName: 'km7_test_crawler_video'
     }
 }

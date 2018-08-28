@@ -105,7 +105,8 @@ class Yaoshe{
             await this.saveList(list);
             // this.crawlerEmbed()
         }catch(e){
-            console.log(e)
+            console.error(e)
+            console.error('crawlerMain error')
         }
     }
      /**
