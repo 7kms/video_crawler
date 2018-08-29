@@ -99,15 +99,16 @@ class Yaoshe{
      * 得到详情页链接, 加入队列
      */
     async crawlerMain(){
-        try{
-            let dom = await $get(this.mainpage);
-            let list = this.getPageListByDom(dom);
-            await this.saveList(list);
-            // this.crawlerEmbed()
-        }catch(e){
-            console.error(e)
-            console.error('crawlerMain error')
-        }
+        let dom = await $get(this.mainpage);
+        let list = this.getPageListByDom(dom);
+        await this.saveList(list);
+        // try{
+           
+        //     // this.crawlerEmbed()
+        // }catch(e){
+        //     console.error(e)
+        //     console.error('crawlerMain error')
+        // }
     }
      /**
      * 解析视频下载地址
@@ -124,19 +125,15 @@ class Yaoshe{
             this.restart();
             return false;
         }
-        try{
-            let item = await this.queue.shift();
-            let target_url = await this.getTargetUrl(item);
-            this.crawlerDetail(item)
-            if(target_url){
-                item.categories = await this.getCategory(item);
-                item.target_url = target_url;
-                await yaosheModel.insert(item);
-                // console.log(item)
-                console.log('1 item is insert to db');
-            }
-        }catch(e){
-            console.error(e)
+        let item = await this.queue.shift();
+        let target_url = await this.getTargetUrl(item);
+        this.crawlerDetail(item)
+        if(target_url){
+            item.categories = await this.getCategory(item);
+            item.target_url = target_url;
+            await yaosheModel.insert(item);
+            // console.log(item)
+            console.log('1 item is insert to db');
         }
         // this.crawlerEmbed();
     }
