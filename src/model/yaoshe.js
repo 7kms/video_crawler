@@ -10,6 +10,7 @@ class Model{
         this.instance = db.collection(this.collection);
     }
     async insert(obj){
+        obj.created_at = new Date()
         return await this.instance.insertOne(obj)
     }
 }

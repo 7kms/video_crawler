@@ -72,14 +72,14 @@ class Queue{
     }
     clear(){
         return new Promise((resolve,reject)=>{
-            this.client.del(this.key_prefix_list,function (err,reply) {
+            this.client.del([this.key_prefix_list,this.key_prefix_set],function (err,reply) {
                 if(!err){
                     resolve(reply)
                 }else{
                     reject(err)
                 }
             })
-        })
+        });
     }
 }
 

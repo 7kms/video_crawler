@@ -4,7 +4,11 @@ const gray = require('./gray')
 const env = process.env.NODE_ENV
 console.log('env = %s', env)
 
-const base = {}
+const base = {
+    source: {
+        yaoshe:'https://yaoshe13.com'
+    }
+}
 
 const envConfig = env == 'production' ? prod : env == 'gray' ? gray : dev;
 const finallyConfig = Object.assign({},base,envConfig);

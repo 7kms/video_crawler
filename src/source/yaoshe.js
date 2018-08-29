@@ -15,28 +15,39 @@ class Yaoshe{
         this.restartTimes = 0;
         this.mainpage = yaoshe;
         this.queue = new Queue('yaoshe');
-        this.queryIntervalTime = 10000;
+        this.queryIntervalTime = 1000;
+    }
+   /**
+    * 防止原网站更换域名,将其替换掉
+    * @param {String} url 
+    */
+    processUrl(url=''){
+        const reg = /https:\/\/[^/]+/;
+        return url.replace(reg,'')
     }
     getEmbedUrl(href){
         let reg = /videos\/(\d+?)\//;
         let res = href.match(reg);
         let id = res ? res[1] : null;
-        return id ? `${yaoshe}embed/${id}` : false;
+        return id ? `/embed/${id}` : false;
     }
     async getTargetUrl(item){
-        let dom = await $get(item.embed_url);
+        let dom = await $get(`${this.mainpage}${item.embed_url}`);
         const reg = /video_url:.*?'(.*?)'/;
         let res = dom.match(reg);
         let url = '';
         if(res){
             url = res[1]
         }
-        return url;
+        return this.processUrl(url);
     }
-    async getCategory(item){
-        let dom = await $get(item.url);
+    async getDetailInfo(item){
+        // console.log(item)
+        let dom = await $get(`${this.mainpage}${item.url}`);
+        // console.log(`${this.mainpage}${item.url}`)
         const $ = cheerio.load(dom);
         let arr = [];
+    
         $('#tab_video_info .info .item').each((i, item)=>{
             if(i == 1){
                 $(item).find('a').each((i,a)=>{
@@ -45,8 +56,16 @@ class Yaoshe{
                 return false;
             }
         })
-        console.log(arr)
-        return arr;
+        // let poster = $('.fp-poster img')[0];
+        // let poster = $('.fp-poster img')[0];
+        // if(!poster){
+        //     poster = $('.player-holder img')[0];
+        // }
+
+        // console.log(poster)
+        // poster = this.processUrl(poster)
+        // console.log(arr)
+        return {categories: arr};
     }
     getPageListByDom(dom){
         const $ = cheerio.load(dom);
@@ -58,6 +77,7 @@ class Yaoshe{
             let duration = $(item).find('.duration').text();
             let timeArr = duration.split(reg);
             let seconds = 60*timeArr[0] + parseInt(timeArr[1]); 
+            url = this.processUrl(url)
             list.push({
                 title,
                 url,
@@ -129,7 +149,9 @@ class Yaoshe{
         let target_url = await this.getTargetUrl(item);
         this.crawlerDetail(item)
         if(target_url){
-            item.categories = await this.getCategory(item);
+            const {categories,poster} = await this.getDetailInfo(item);
+            item.categories = categories;
+            // item.poster = poster;
             item.target_url = target_url;
             await yaosheModel.insert(item);
             // console.log(item)
@@ -143,7 +165,7 @@ class Yaoshe{
     async crawlerDetail(item){
        let queueLength = await this.queue.count();
        if(queueLength > 10000) return false;
-       let dom = await $get(item.url);
+       let dom = await $get(`${this.mainpage}${item.url}`);
        let list = this.getPageListByDom(dom);
        await this.saveList(list);
     }

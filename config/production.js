@@ -1,7 +1,4 @@
 module.exports = {
-    source: {
-        yaoshe:'https://yaoshe11.com/'
-    },
     redis_key_prefix: 'km7_crawler_',
     redis:{
        port: 6379,
