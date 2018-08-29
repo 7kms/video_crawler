@@ -15,7 +15,7 @@ class Yaoshe{
         this.restartTimes = 0;
         this.mainpage = yaoshe;
         this.queue = new Queue('yaoshe');
-        this.queryIntervalTime = 1000;
+        this.queryIntervalTime = 10000;
     }
    /**
     * 防止原网站更换域名,将其替换掉

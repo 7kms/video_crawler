@@ -19,7 +19,7 @@ const run = async ()=>{
         item.target_url = yaoshe.processUrl(item.target_url)
         item.hash = md5(item.url)
         await queue.push(item);
-        await yaosheModel.instance.updateOne({_id: item._id}, {$set:item})
+        // await yaosheModel.instance.updateOne({_id: item._id}, {$set:item})
         console.log(list.length)
     }
     process.exit(0)
