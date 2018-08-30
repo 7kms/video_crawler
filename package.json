@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev":"node ./src/index.js",
     "gray":"NODE_ENV=gray node ./src/index.js",
     "release": "pm2 restart ecosystem.config.js"
   },

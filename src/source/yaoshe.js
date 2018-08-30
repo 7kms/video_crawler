@@ -89,8 +89,13 @@ class Yaoshe{
         return list;
     }
     async start(){
-       await this.crawlerMain();
-       this.run();
+        console.log('crawler start...')
+        try{
+            await this.crawlerMain();
+        }catch(e){
+            console.log(e)
+        }
+        this.run();
     }
     restart(){
         if(this.timer){
