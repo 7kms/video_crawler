@@ -105,8 +105,13 @@ class Yaoshe{
         this.start();
     }
     run(){
-        this.timer = setInterval(()=>{
-            this.crawlerEmbed()
+        this.timer = setInterval(async ()=>{
+            try{
+                await this.crawlerEmbed()
+            }catch(e){
+                console.error(e)
+            }
+            
         }, this.queryIntervalTime)
     }
     async saveList(list){

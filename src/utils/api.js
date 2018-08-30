@@ -27,7 +27,7 @@ const $api = (options,isJson)=>{
                 console.log(error)
                 reject({status:response.statusCode,error})
             }else if(response.statusCode != 200){
-                console.error('remote api failed', options, body)
+                console.error('remote api failed', response.statusCode,options, body)
                 reject({status:response.statusCode,body})
             }else{
                 resolve(body)
