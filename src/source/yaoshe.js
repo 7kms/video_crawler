@@ -157,7 +157,7 @@ class Yaoshe{
         }
         let item = await this.queue.shift();
         let target_url = await this.getTargetUrl(item);
-        this.crawlerDetail(item)
+        
         if(target_url){
             const {categories,poster} = await this.getDetailInfo(item);
             item.categories = categories;
@@ -167,6 +167,7 @@ class Yaoshe{
             // console.log(item)
             console.log('1 item is insert to db');
         }
+        await this.crawlerDetail(item);
         // this.crawlerEmbed();
     }
      /**
