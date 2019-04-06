@@ -33,13 +33,22 @@ class Yaoshe{
     }
     async getTargetUrl(item){
         let dom = await $get(`${this.mainpage}${item.embed_url}`);
-        const reg = /video_url:.*?'(.*?)'/;
-        let res = dom.match(reg);
-        let url = '';
-        if(res){
-            url = res[1]
+        const regVideo = /video_url:.*?'(.*?)'/;
+        const regCover = /preview_url:.*?'(.*?)'/;
+        let res1 = dom.match(regVideo);
+        let res2 = dom.match(regCover);
+        let video_url = '';
+        let cover_url = ''
+        if(res1){
+            video_url = res1[1]
         }
-        return this.processUrl(url);
+        if(res2){
+            cover_url = res2[1]
+        }
+        return {
+            video_url: this.processUrl(video_url),
+            cover_url: this.processUrl(cover_url)
+        };
     }
     async getDetailInfo(item){
         // console.log(item)
@@ -156,13 +165,14 @@ class Yaoshe{
             return false;
         }
         let item = await this.queue.shift();
-        let target_url = await this.getTargetUrl(item);
+        let {target_url,cover_url} = await this.getTargetUrl(item);
         
         if(target_url){
-            const {categories,poster} = await this.getDetailInfo(item);
+            const {categories} = await this.getDetailInfo(item);
             item.categories = categories;
             // item.poster = poster;
             item.target_url = target_url;
+            item.cover_url = cover_url;
             await yaosheModel.insert(item);
             // console.log(item)
             console.log('1 item is insert to db');
